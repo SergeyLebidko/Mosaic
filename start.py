@@ -18,13 +18,7 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
 
     square = pygame.Rect(0, 0, 50, 50)
-    move_functions = {
-        273: [lambda v: v - 15, 'centery'],
-        275: [lambda v: v + 15, 'centerx'],
-        274: [lambda v: v + 15, 'centery'],
-        276: [lambda v: v - 15, 'centerx']
-    }
-    move_list = []
+    drag_flag = False
 
     while True:
         events = pygame.event.get()
@@ -33,20 +27,18 @@ if __name__ == '__main__':
                 pygame.quit()
                 exit()
 
-            if event.type == pygame.KEYDOWN:
-                move_list.append(event.key)
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
+                x_press, y_press = event.pos
+                if square.left <= x_press <= square.right and square.top <= y_press <= square.bottom:
+                    drag_flag = True
 
-            if event.type == pygame.KEYUP:
-                move_list.remove(event.key)
+            if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
+                drag_flag = False
 
-        for move in move_list:
-            old_top, old_right, old_bottom, old_left = square.top, square.right, square.bottom, square.left
-            function, value_name = move_functions[move]
-            value = getattr(square, value_name)
-            value = function(value)
-            setattr(square, value_name, value)
-            if square.top < 0 or square.right > W or square.bottom > H or square.left < 0:
-                square.top, square.right, square.bottom, square.left = old_top, old_right, old_bottom, old_left
+            if event.type == pygame.MOUSEMOTION and drag_flag:
+                dx, dy = event.rel
+                square.centerx += dx
+                square.centery += dy
 
         sc.fill((0, 0, 0))
         pygame.draw.rect(sc, (255, 255, 255), square)
