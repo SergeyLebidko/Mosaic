@@ -25,16 +25,16 @@ demo_data = [
 ]
 
 # Папка для хранения спрайтов
-sprites_folder = 'sprites'
+SPRITES_FOLDER = 'images'
 
 # Цвет фона по-умолчанию для pillow
-transparency_color = (0, 0, 0)
+TRANSPARENCY_COLOR = (0, 0, 0)
 
 # Количество цветовых переходов
-level_count = 5
+LEVEL_COUNT = 5
 
 # Ширина центральной зоны
-center_area = 1
+CENTER_AREA = 1
 
 
 def square_generator(r0=100, color=(255, 255, 255), filename='square'):
@@ -43,20 +43,20 @@ def square_generator(r0=100, color=(255, 255, 255), filename='square'):
     draw = ImageDraw.Draw(img)
 
     r_color, g_color, b_color = color
-    for k in range(level_count, 0, -1):
-        r = r0 - (r0 / (level_count + center_area)) * (level_count - k)
+    for k in range(LEVEL_COUNT, 0, -1):
+        r = r0 - (r0 / (LEVEL_COUNT + CENTER_AREA)) * (LEVEL_COUNT - k)
         x1 = (r0 - r) / 2
         y1 = (r0 - r) / 2
         x2 = x1 + r
         y2 = y1 + r
         background_color = (
-            r_color - int((r_color / 3) * ((k - 1) / level_count)),
-            g_color - int((g_color / 3) * ((k - 1) / level_count)),
-            b_color - int((b_color / 3) * ((k - 1) / level_count))
+            r_color - int((r_color / 3) * ((k - 1) / LEVEL_COUNT)),
+            g_color - int((g_color / 3) * ((k - 1) / LEVEL_COUNT)),
+            b_color - int((b_color / 3) * ((k - 1) / LEVEL_COUNT))
         )
         draw.rectangle((x1, y1, x2, y2), fill=background_color)
 
-    img.save(f'{sprites_folder}/{filename}.png', 'png', transparency=transparency_color)
+    img.save(f'{SPRITES_FOLDER}/{filename}.png', 'png', transparency=TRANSPARENCY_COLOR)
 
 
 def hexagon_generator(r0=100, color=(255, 255, 255), filename='hexagon'):
@@ -67,19 +67,19 @@ def hexagon_generator(r0=100, color=(255, 255, 255), filename='hexagon'):
     x0, y0 = w // 2, h // 2
 
     # Вспомогательные объекты для создания изображения
-    img = Image.new('RGB', (w, h), transparency_color)
+    img = Image.new('RGB', (w, h), TRANSPARENCY_COLOR)
     draw = ImageDraw.Draw(img)
 
     min_x, min_y, max_x, max_y = w + 1, h + 1, -1, -1
     r_color, g_color, b_color = color
-    for k in range(level_count, 0, -1):
+    for k in range(LEVEL_COUNT, 0, -1):
 
         # Определяем параметры шестиугольника - цвет и размер (движемся от большего к меньшему)
-        r = r0 - (r0 / (level_count + center_area)) * (level_count - k)
+        r = r0 - (r0 / (LEVEL_COUNT + CENTER_AREA)) * (LEVEL_COUNT - k)
         background_color = (
-            r_color - int((r_color / 3) * ((k - 1) / level_count)),
-            g_color - int((g_color / 3) * ((k - 1) / level_count)),
-            b_color - int((b_color / 3) * ((k - 1) / level_count))
+            r_color - int((r_color / 3) * ((k - 1) / LEVEL_COUNT)),
+            g_color - int((g_color / 3) * ((k - 1) / LEVEL_COUNT)),
+            b_color - int((b_color / 3) * ((k - 1) / LEVEL_COUNT))
         )
 
         # Определяем координаты вершин шестиугольника и рисуем его
@@ -92,7 +92,7 @@ def hexagon_generator(r0=100, color=(255, 255, 255), filename='hexagon'):
         draw.polygon(coords, fill=background_color)
 
         # Определяем координаты прямоугольника, в который вписан самый большой шестиугольник
-        if k == level_count:
+        if k == LEVEL_COUNT:
             x_coords = coords[0:len(coords):2]
             y_coords = coords[1:len(coords):2]
             min_x = min(min_x, *x_coords)
@@ -102,14 +102,14 @@ def hexagon_generator(r0=100, color=(255, 255, 255), filename='hexagon'):
 
     # Отрезаем лишние поля и сохраняем изображение
     img = img.crop((min_x, min_y, max_x, max_y))
-    img.save(f'{sprites_folder}/{filename}.png', 'png', transparency=transparency_color)
+    img.save(f'{SPRITES_FOLDER}/{filename}.png', 'png', transparency=TRANSPARENCY_COLOR)
 
 
 def create_sprites():
     try:
-        os.mkdir('sprites')
+        os.mkdir(SPRITES_FOLDER)
     except FileExistsError:
         pass
     for *color, filename in demo_data:
-        hexagon_generator(r0=80, color=color, filename=f'hex_{filename}')
-        square_generator(r0=80, color=color, filename=f'square_{filename}')
+        hexagon_generator(color=color, filename=f'hex_{filename}')
+        square_generator(color=color, filename=f'square_{filename}')
