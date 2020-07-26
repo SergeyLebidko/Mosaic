@@ -42,6 +42,13 @@ class Polymino:
         for monomino in self.monomino_list:
             monomino.rect.move_ip((dx, dy))
 
+    def rotate(self):
+        x0 = sum([monomino.rect.centerx for monomino in self.monomino_list]) / len(self.monomino_list)
+        y0 = sum([monomino.rect.centery for monomino in self.monomino_list]) / len(self.monomino_list)
+        for monomino in self.monomino_list:
+            x1, y1 = x0 - (monomino.rect.centery - y0), y0 + (monomino.rect.centerx - x0)
+            monomino.rect.centerx, monomino.rect.centery = x1, y1
+
     def collidepoint(self, x, y):
         return any([monomino.rect.collidepoint((x, y)) for monomino in self.monomino_list])
 
@@ -87,7 +94,7 @@ def main():
 
     clock = pygame.time.Clock()
 
-    polymino = create_polymino('_X__|XX__|_XX_|__X_', 5)
+    polymino = create_polymino('XXXX|X___|XX__|X___', 5)
     drag_flag = False
 
     while True:
@@ -97,15 +104,23 @@ def main():
                 pygame.quit()
                 exit()
 
+            # Захват мышкой полимино
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
                 if polymino.collidepoint(*event.pos):
                     drag_flag = True
 
-            if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
-                drag_flag = False
+            # Поворот захваченного полимино
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_RIGHT:
+                if drag_flag:
+                    polymino.rotate()
 
+            # Перемещение захваченного полимино
             if event.type == pygame.MOUSEMOTION and drag_flag:
                 polymino.move_ip(*event.rel)
+
+            # Сброс захвата полимино
+            if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
+                drag_flag = False
 
         draw_grid(sc)
         polymino.blit(sc)
