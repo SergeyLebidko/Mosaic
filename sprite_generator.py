@@ -34,7 +34,7 @@ def create_sprite_folder():
         pass
 
 
-def create_square_sprite(r0=30, color=(255, 255, 255), filename='square'):
+def create_square_sprite(r0=100, color=(255, 255, 255), filename='square'):
     # Вспомогательные объекты для создания изображения
     img = Image.new('RGB', (r0, r0))
     draw = ImageDraw.Draw(img)
@@ -54,6 +54,6 @@ def create_square_sprite(r0=30, color=(255, 255, 255), filename='square'):
     img.save(f'{SPRITES_FOLDER}/{filename}.png', 'png', transparency=TRANSPARENCY_COLOR)
 
 
-def create_sprites():
+def create_sprites(r0=100):
     for number, color in enumerate(COLOR_PRESETS, 1):
-        create_square_sprite(color=color, filename=f'{number}')
+        create_square_sprite(r0=r0, color=color, filename=f'{number}')

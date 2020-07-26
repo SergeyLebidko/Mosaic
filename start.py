@@ -1,12 +1,35 @@
 import pygame
 from sprite_generator import create_sprites, create_square_sprite, SPRITES_FOLDER
 
+# Частота обновления окна
 FPS = 30
-W, H = 1200, 800
+
+# Размер ячейки фоновой сетки
+CELL_SIZE = 50
+
+# Размер окна
+W, H = CELL_SIZE * 32, CELL_SIZE * 17
+
+# Заголовок окна
 WINDOW_TITLE = 'Mosaic'
 
-if __name__ == '__main__':
-    create_sprites()
+# Цвет фона ячеек
+CELL_COLOR = (220, 220, 220)
+
+# Цвет сетки
+GRID_COLOR = (120, 120, 120)
+
+
+def draw_grid(surface):
+    surface.fill(CELL_COLOR)
+    for x in range(CELL_SIZE, W - CELL_SIZE + 1, CELL_SIZE):
+        pygame.draw.line(surface, GRID_COLOR, (x, CELL_SIZE), (x, H - CELL_SIZE))
+    for y in range(CELL_SIZE, H - CELL_SIZE + 1, CELL_SIZE):
+        pygame.draw.line(surface, GRID_COLOR, (CELL_SIZE, y), (W - CELL_SIZE, y))
+
+
+def main():
+    create_sprites(CELL_SIZE - 2)
     create_square_sprite(16, (255, 0, 0), 'icon')
 
     pygame.init()
@@ -17,7 +40,7 @@ if __name__ == '__main__':
 
     clock = pygame.time.Clock()
 
-    square = pygame.Rect(0, 0, 30, 30)
+    square = pygame.Rect(0, 0, CELL_SIZE - 2, CELL_SIZE - 2)
     drag_flag = False
 
     while True:
@@ -40,8 +63,12 @@ if __name__ == '__main__':
                 square.centerx += dx
                 square.centery += dy
 
-        sc.fill((0, 0, 0))
+        draw_grid(sc)
         pygame.draw.rect(sc, (255, 255, 255), square)
 
         pygame.display.update()
         clock.tick(FPS)
+
+
+if __name__ == '__main__':
+    main()
