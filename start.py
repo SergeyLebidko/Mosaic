@@ -51,17 +51,14 @@ def main():
                 exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
-                x_press, y_press = event.pos
-                if square.left <= x_press <= square.right and square.top <= y_press <= square.bottom:
+                if square.collidepoint(event.pos):
                     drag_flag = True
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
                 drag_flag = False
 
             if event.type == pygame.MOUSEMOTION and drag_flag:
-                dx, dy = event.rel
-                square.centerx += dx
-                square.centery += dy
+                square.move_ip(event.rel)
 
         draw_grid(sc)
         pygame.draw.rect(sc, (255, 255, 255), square)
