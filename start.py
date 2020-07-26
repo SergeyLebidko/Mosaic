@@ -20,6 +20,14 @@ CELL_COLOR = (220, 220, 220)
 GRID_COLOR = (120, 120, 120)
 
 
+class Monomino(pygame.sprite.Sprite):
+
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load(f'{SPRITES_FOLDER}/3.png')
+        self.rect = self.image.get_rect()
+
+
 def draw_grid(surface):
     surface.fill(CELL_COLOR)
     for x in range(CELL_SIZE, W - CELL_SIZE + 1, CELL_SIZE):
@@ -40,7 +48,7 @@ def main():
 
     clock = pygame.time.Clock()
 
-    square = pygame.Rect(0, 0, CELL_SIZE - 2, CELL_SIZE - 2)
+    square = Monomino()
     drag_flag = False
 
     while True:
@@ -51,17 +59,17 @@ def main():
                 exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
-                if square.collidepoint(event.pos):
+                if square.rect.collidepoint(event.pos):
                     drag_flag = True
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
                 drag_flag = False
 
             if event.type == pygame.MOUSEMOTION and drag_flag:
-                square.move_ip(event.rel)
+                square.rect.move_ip(event.rel)
 
         draw_grid(sc)
-        pygame.draw.rect(sc, (255, 255, 255), square)
+        sc.blit(square.image, square.rect)
 
         pygame.display.update()
         clock.tick(FPS)
