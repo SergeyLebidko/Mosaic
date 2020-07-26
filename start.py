@@ -1,5 +1,5 @@
 import pygame
-from sprite_generator import create_sprites, square_generator, SPRITES_FOLDER
+from sprite_generator import create_sprites, create_square_sprite, SPRITES_FOLDER
 
 FPS = 30
 W, H = 1200, 800
@@ -7,7 +7,7 @@ WINDOW_TITLE = 'Mosaic'
 
 if __name__ == '__main__':
     create_sprites()
-    square_generator(16, (255, 0, 0), 'icon')
+    create_square_sprite(16, (255, 0, 0), 'icon')
 
     pygame.init()
     sc = pygame.display.set_mode((W, H))
@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     clock = pygame.time.Clock()
 
-    square = pygame.Rect(0, 0, 50, 50)
+    square = pygame.Rect(0, 0, 30, 30)
     drag_flag = False
 
     while True:
