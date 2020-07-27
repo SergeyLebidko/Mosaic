@@ -1,5 +1,5 @@
 import pygame
-from sprite_generator import create_sprites, create_square_sprite, SPRITES_FOLDER
+from sprite_generator import create_sprite_folder, create_sprites, create_square_sprite, SPRITES_FOLDER
 
 # Частота обновления окна
 FPS = 30
@@ -7,8 +7,14 @@ FPS = 30
 # Размер ячейки фоновой сетки
 CELL_SIZE = 50
 
+# Количество ячеек на игровом поле
+ROW_COUNT, COL_COUNT = 15, 30
+
 # Размер окна
-W, H = CELL_SIZE * 32, CELL_SIZE * 17
+W, H = CELL_SIZE * (COL_COUNT + 2), CELL_SIZE * (ROW_COUNT + 2)
+
+# Прямоугольник для игрового поля
+FIELD_RECT = pygame.Rect(CELL_SIZE, CELL_SIZE, CELL_SIZE * COL_COUNT, CELL_SIZE * ROW_COUNT)
 
 # Заголовок окна
 WINDOW_TITLE = 'Mosaic'
@@ -26,8 +32,11 @@ class Monomino(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load(f'{SPRITES_FOLDER}/{color_number}.png')
         self.rect = self.image.get_rect()
-        self.rect.x = CELL_SIZE + (CELL_SIZE * col) + 1
-        self.rect.y = CELL_SIZE + (CELL_SIZE * row) + 1
+        self.row, self.col = row, col
+        self.refresh_coords()
+
+    def refresh_coords(self):
+        self.rect.x, self.rect.y = get_coords_for_cell(self.row, self.col)
 
 
 class Polymino:
@@ -77,13 +86,36 @@ class Drag:
             self.polymino.rotate()
 
     def drop(self):
+        polymino_rect = self.polymino.monomino_list[0].rect.unionall(
+            [monomino.rect for monomino in self.polymino.monomino_list[1:]]
+        )
+        if FIELD_RECT.contains(polymino_rect):
+            for monomino in self.polymino.monomino_list:
+                monomino.row, monomino.col = get_cell_for_coords(monomino.rect.centerx, monomino.rect.centery)
+                monomino.refresh_coords()
+        else:
+            for monomino in self.polymino.monomino_list:
+                monomino.rect.x, monomino.rect.y = get_coords_for_cell(monomino.row, monomino.col)
         self.polymino = None
 
-    @property
-    def status(self):
-        return self.polymino is not None
+
+def draw_grid(surface):
+    surface.fill(CELL_COLOR)
+    for x in range(CELL_SIZE, W - CELL_SIZE + 1, CELL_SIZE):
+        pygame.draw.line(surface, GRID_COLOR, (x, CELL_SIZE), (x, H - CELL_SIZE))
+    for y in range(CELL_SIZE, H - CELL_SIZE + 1, CELL_SIZE):
+        pygame.draw.line(surface, GRID_COLOR, (CELL_SIZE, y), (W - CELL_SIZE, y))
 
 
+def get_coords_for_cell(row, col):
+    return CELL_SIZE + (CELL_SIZE * col) + 1, CELL_SIZE + (CELL_SIZE * row) + 1
+
+
+def get_cell_for_coords(x, y):
+    return y // CELL_SIZE - 1, x // CELL_SIZE - 1
+
+
+# Временная функция для тетирования
 def create_polymino(data, color_number):
     polymino = Polymino()
 
@@ -101,16 +133,9 @@ def create_polymino(data, color_number):
     return polymino
 
 
-def draw_grid(surface):
-    surface.fill(CELL_COLOR)
-    for x in range(CELL_SIZE, W - CELL_SIZE + 1, CELL_SIZE):
-        pygame.draw.line(surface, GRID_COLOR, (x, CELL_SIZE), (x, H - CELL_SIZE))
-    for y in range(CELL_SIZE, H - CELL_SIZE + 1, CELL_SIZE):
-        pygame.draw.line(surface, GRID_COLOR, (CELL_SIZE, y), (W - CELL_SIZE, y))
-
-
 def main():
     # Создаем спрайты для игры и иконку окна
+    create_sprite_folder()
     create_sprites(CELL_SIZE - 1)
     create_square_sprite(16, (255, 0, 0), 'icon')
 
