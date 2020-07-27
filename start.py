@@ -38,7 +38,7 @@ class Polymino:
     def add(self, monomino):
         self.monomino_list.append(monomino)
 
-    def move_ip(self, dx, dy):
+    def move(self, dx, dy):
         for monomino in self.monomino_list:
             monomino.rect.move_ip((dx, dy))
 
@@ -55,6 +55,33 @@ class Polymino:
     def blit(self, surface):
         for monomino in self.monomino_list:
             surface.blit(monomino.image, monomino.rect)
+
+
+class Drag:
+
+    def __init__(self, polymino_list):
+        self.polymino_list = polymino_list
+        self.polymino = None
+
+    def take(self, x, y):
+        for polymino in self.polymino_list:
+            if polymino.collidepoint(x, y):
+                self.polymino = polymino
+
+    def move(self, dx, dy):
+        if self.polymino:
+            self.polymino.move(dx, dy)
+
+    def rotate(self):
+        if self.polymino:
+            self.polymino.rotate()
+
+    def drop(self):
+        self.polymino = None
+
+    @property
+    def status(self):
+        return self.polymino is not None
 
 
 def create_polymino(data, color_number):
@@ -83,9 +110,11 @@ def draw_grid(surface):
 
 
 def main():
+    # Создаем спрайты для игры и иконку окна
     create_sprites(CELL_SIZE - 1)
     create_square_sprite(16, (255, 0, 0), 'icon')
 
+    # Инициализируем окно игры
     pygame.init()
     sc = pygame.display.set_mode((W, H))
     icon = pygame.image.load(f'{SPRITES_FOLDER}/icon.png')
@@ -93,9 +122,12 @@ def main():
     pygame.display.set_caption(WINDOW_TITLE)
 
     clock = pygame.time.Clock()
+    polymino_list = []
 
     polymino = create_polymino('XXXX|X___|XX__|X___', 5)
-    drag_flag = False
+    polymino_list.append(polymino)
+
+    drag = Drag(polymino_list)
 
     while True:
         events = pygame.event.get()
@@ -106,21 +138,19 @@ def main():
 
             # Захват мышкой полимино
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
-                if polymino.collidepoint(*event.pos):
-                    drag_flag = True
+                drag.take(*event.pos)
 
             # Поворот захваченного полимино
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_RIGHT:
-                if drag_flag:
-                    polymino.rotate()
+                drag.rotate()
 
             # Перемещение захваченного полимино
-            if event.type == pygame.MOUSEMOTION and drag_flag:
-                polymino.move_ip(*event.rel)
+            if event.type == pygame.MOUSEMOTION and drag:
+                drag.move(*event.rel)
 
             # Сброс захвата полимино
             if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
-                drag_flag = False
+                drag.drop()
 
         draw_grid(sc)
         polymino.blit(sc)
