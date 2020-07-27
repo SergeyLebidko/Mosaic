@@ -86,6 +86,8 @@ class Drag:
             self.polymino.rotate()
 
     def drop(self):
+        if not self.polymino:
+            return
         polymino_rect = self.polymino.monomino_list[0].rect.unionall(
             [monomino.rect for monomino in self.polymino.monomino_list[1:]]
         )
