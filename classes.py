@@ -154,12 +154,15 @@ class Level:
         polymino_list = []
         anchor_row = (ROW_COUNT // 2) - (area_rows_count // 2)
         anchor_col = (COL_COUNT // 2) - (area_cols_count // 2)
+        color_number = 1
         for _, cells in data.items():
             polymino = Polymino()
-            color_number = random.randint(1, SPRITE_COLORS_COUNT)
             for row, col in cells:
                 polymino.add(Monomino(anchor_row + row, anchor_col + col, color_number))
             polymino_list.append(polymino)
+            color_number += 1
+            if color_number > SPRITE_COLORS_COUNT:
+                color_number = 1
 
         # В словаре будет храниться описание уровня
         level = {
