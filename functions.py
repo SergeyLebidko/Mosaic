@@ -21,9 +21,12 @@ def draw_grid(surface):
         pygame.draw.line(surface, GRID_COLOR, (CELL_SIZE, y), (W - CELL_SIZE, y))
 
 
-def draw_polyminos(surface, polymino_list):
+def draw_polyminos(surface, polymino_list, drag):
     for polymino in polymino_list:
-        polymino.blit(surface)
+        if polymino is not drag.polymino:
+            polymino.blit(surface)
+    if drag.polymino:
+        drag.polymino.blit(surface)
 
 
 def draw_area(surface, anchor_row, anchor_col, area_rows_count, area_cols_count):

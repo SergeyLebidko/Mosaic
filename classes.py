@@ -66,21 +66,37 @@ class Drag:
     def drop(self):
         if not self.polymino:
             return
+
+        def cancel_move():
+            for monomino in self.polymino.monomino_list:
+                monomino.rect.x, monomino.rect.y = get_coords_for_cell(monomino.row, monomino.col)
+
+        # Если полимино не находится полностью на игровом поле - отменяем перемещение
         polymino_rect = self.polymino.monomino_list[0].rect.unionall(
             [monomino.rect for monomino in self.polymino.monomino_list[1:]]
         )
-        if FIELD_RECT.contains(polymino_rect):
-            for monomino in self.polymino.monomino_list:
-                monomino.row, monomino.col = get_cell_for_coords(monomino.rect.centerx, monomino.rect.centery)
-                monomino.refresh_coords()
-        else:
-            for monomino in self.polymino.monomino_list:
-                monomino.rect.x, monomino.rect.y = get_coords_for_cell(monomino.row, monomino.col)
+        if not FIELD_RECT.contains(polymino_rect):
+            cancel_move()
+            self.polymino = None
+            return
+
+        # Если новые координаты полимино пересекаются с координатами другого полимино - отменяем перемещение
+        c1 = [(get_cell_for_coords(*monomino.rect.center)) for monomino in self.polymino.monomino_list]
+        c2 = [(monomino.row, monomino.col) for polymino in self.polymino_list for monomino in polymino.monomino_list]
+        if set(c1) & set(c2):
+            cancel_move()
+            self.polymino = None
+            return
+
+        # Если все условия выполнены - фиксируем перемещение
+        for index, cell in enumerate(c1, 0):
+            self.polymino.monomino_list[index].row, self.polymino.monomino_list[index].col = cell[0], cell[1]
+            self.polymino.monomino_list[index].refresh_coords()
         self.polymino = None
 
 
 class Level:
-    areas = [(13, 10)]
+    areas = [(7, 6)]
 
     def __init__(self):
         self.level_number = 0
