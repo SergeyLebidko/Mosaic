@@ -136,8 +136,8 @@ class Level:
 
         # Формируем полимино на основе сформированных данных
         polymino_list = []
-        anchor_row = (ROW_COUNT // 2) - (area_rows_count // 2) + 1
-        anchor_col = (COL_COUNT // 2) - (area_cols_count // 1) + 1
+        anchor_row = (ROW_COUNT // 2) - (area_rows_count // 2)
+        anchor_col = (COL_COUNT // 2) - (area_cols_count // 2)
         for _, cells in data.items():
             polymino = Polymino()
             color_number = random.randint(1, SPRITE_COLORS_COUNT)

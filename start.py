@@ -1,7 +1,7 @@
 import pygame
 from settings import CELL_SIZE, W, H, WINDOW_TITLE, FPS, SPRITES_FOLDER
 from classes import Monomino, Polymino, Drag, Level
-from functions import draw_grid, create_sprite_folder, create_sprites, create_square_sprite, draw_polyminos
+from functions import draw_grid, create_sprite_folder, create_sprites, create_square_sprite, draw_polyminos, draw_area
 
 
 # Временная функция для тетирования
@@ -40,6 +40,7 @@ def main():
 
     for level in Level():
         polymino_list = level['polymino_list']
+        area = level['area']
         drag = Drag(polymino_list)
 
         while True:
@@ -66,6 +67,7 @@ def main():
                     drag.drop()
 
             draw_grid(sc)
+            draw_area(sc, *area)
             draw_polyminos(sc, polymino_list)
 
             pygame.display.update()

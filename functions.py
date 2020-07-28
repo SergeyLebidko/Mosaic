@@ -2,7 +2,7 @@ import os
 import pygame
 from PIL import Image, ImageDraw
 from settings import CELL_SIZE, CELL_COLOR, GRID_COLOR, W, H, SPRITES_FOLDER, SPRITE_COLOR_LEVEL_COUNT, \
-    SPRITE_CENTER_AREA, TRANSPARENCY_COLOR, COLOR_PRESETS
+    SPRITE_CENTER_AREA, TRANSPARENCY_COLOR, COLOR_PRESETS, AREA_COLORS
 
 
 def get_coords_for_cell(row, col):
@@ -24,6 +24,23 @@ def draw_grid(surface):
 def draw_polyminos(surface, polymino_list):
     for polymino in polymino_list:
         polymino.blit(surface)
+
+
+def draw_area(surface, anchor_row, anchor_col, area_rows_count, area_cols_count):
+    x0, y0 = get_coords_for_cell(anchor_row, anchor_col)
+    w, h = CELL_SIZE * area_cols_count - 1, CELL_SIZE * area_rows_count - 1
+
+    area_surface = pygame.Surface((w, h))
+    area_surface.set_alpha(80)
+
+    color_index = 0
+    for x in range(0, w + 1, 5):
+        color_index = abs(color_index - 1)
+        for y in range(0, h + 1, 5):
+            pygame.draw.rect(area_surface, AREA_COLORS[color_index], (x, y, 5, 5))
+            color_index = abs(color_index - 1)
+
+    surface.blit(area_surface, (x0, y0))
 
 
 def create_sprite_folder():
