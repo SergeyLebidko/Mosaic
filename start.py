@@ -1,8 +1,7 @@
 import pygame
-from sprite_generator import create_sprite_folder, create_sprites, create_square_sprite
 from settings import CELL_SIZE, W, H, WINDOW_TITLE, FPS, SPRITES_FOLDER
 from classes import Monomino, Polymino, Drag, Level
-from functions import draw_grid
+from functions import draw_grid, create_sprite_folder, create_sprites, create_square_sprite
 
 
 # Временная функция для тетирования
