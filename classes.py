@@ -80,7 +80,7 @@ class Drag:
 
 
 class Level:
-    areas = [(7, 6)]
+    areas = [(13, 10)]
 
     def __init__(self):
         self.level_number = 0

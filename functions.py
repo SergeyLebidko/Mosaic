@@ -33,12 +33,10 @@ def draw_area(surface, anchor_row, anchor_col, area_rows_count, area_cols_count)
     area_surface = pygame.Surface((w, h))
     area_surface.set_alpha(80)
 
-    color_index = 0
-    for x in range(0, w + 1, 5):
-        color_index = abs(color_index - 1)
-        for y in range(0, h + 1, 5):
-            pygame.draw.rect(area_surface, AREA_COLORS[color_index], (x, y, 5, 5))
-            color_index = abs(color_index - 1)
+    for x in range(0, w + 1, 10):
+        for y in range(0, h + 1, 10):
+            color = AREA_COLORS[((x // 10) + (y // 10)) % 2]
+            pygame.draw.rect(area_surface, color, (x, y, 10, 10))
 
     surface.blit(area_surface, (x0, y0))
 
