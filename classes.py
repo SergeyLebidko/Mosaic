@@ -148,7 +148,8 @@ class Level:
         # В словаре будет храниться описание уровня
         level = {
             'level_number': self.level_number + 1,
-            'polymino_list': polymino_list
+            'polymino_list': polymino_list,
+            'area': (anchor_row, anchor_col, area_rows_count, area_cols_count)
         }
 
         self.level_number += 1

@@ -21,6 +21,11 @@ def draw_grid(surface):
         pygame.draw.line(surface, GRID_COLOR, (CELL_SIZE, y), (W - CELL_SIZE, y))
 
 
+def draw_polyminos(surface, polymino_list):
+    for polymino in polymino_list:
+        polymino.blit(surface)
+
+
 def create_sprite_folder():
     try:
         os.mkdir(SPRITES_FOLDER)

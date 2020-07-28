@@ -1,7 +1,7 @@
 import pygame
 from settings import CELL_SIZE, W, H, WINDOW_TITLE, FPS, SPRITES_FOLDER
 from classes import Monomino, Polymino, Drag, Level
-from functions import draw_grid, create_sprite_folder, create_sprites, create_square_sprite
+from functions import draw_grid, create_sprite_folder, create_sprites, create_square_sprite, draw_polyminos
 
 
 # Временная функция для тетирования
@@ -66,8 +66,7 @@ def main():
                     drag.drop()
 
             draw_grid(sc)
-            for polymino in polymino_list:
-                polymino.blit(sc)
+            draw_polyminos(sc, polymino_list)
 
             pygame.display.update()
             clock.tick(FPS)
