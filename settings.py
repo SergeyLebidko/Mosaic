@@ -13,6 +13,9 @@ COLOR_PRESETS = [
     (255, 128, 0)
 ]
 
+# Количество цветов
+SPRITE_COLORS_COUNT = len(COLOR_PRESETS)
+
 # Папка для хранения спрайтов
 SPRITES_FOLDER = 'images'
 
