@@ -1,8 +1,9 @@
 import os
 import pygame
+import random
 from PIL import Image, ImageDraw
 from settings import CELL_SIZE, CELL_COLOR, GRID_COLOR, W, H, SPRITES_FOLDER, SPRITE_COLOR_LEVEL_COUNT, \
-    SPRITE_CENTER_AREA, TRANSPARENCY_COLOR, COLOR_PRESETS, AREA_COLORS
+    SPRITE_CENTER_AREA, TRANSPARENCY_COLOR, COLOR_PRESETS, AREA_COLORS, ROW_COUNT, COL_COUNT
 
 
 def get_coords_for_cell(row, col):
@@ -11,6 +12,44 @@ def get_coords_for_cell(row, col):
 
 def get_cell_for_coords(x, y):
     return y // CELL_SIZE - 1, x // CELL_SIZE - 1
+
+
+def mix_polyminos(polymino_list):
+    for polymino in polymino_list:
+
+        # Выполняем случайное количество вращений - от 0 до 3
+        for _ in range(0, random.randint(0, 4)):
+            polymino.rotate()
+
+        # Фиксируем положение после вращения
+        for monomino in polymino.monomino_list:
+            monomino.row, monomino.col = get_cell_for_coords(*monomino.rect.center)
+
+        # Ищем якорную точку, ширину и высоту полимино
+        anchor_row = min([monomino.row for monomino in polymino.monomino_list])
+        anchor_col = min([monomino.col for monomino in polymino.monomino_list])
+
+        polymino_width = max([(monomino.col - anchor_col + 1) for monomino in polymino.monomino_list])
+        polymino_height = max([(monomino.row - anchor_row + 1) for monomino in polymino.monomino_list])
+
+        # Устанавливаем положение полимино в левый верхний угол поля
+        for monomino in polymino.monomino_list:
+            monomino.row, monomino.col = monomino.row - anchor_row, monomino.col - anchor_col
+
+        # Составляем список занятых ячеек
+        busy_cells = [(m.row, m.col) for p in polymino_list for m in p.monomino_list if p is not polymino]
+
+        crossing = True
+        while crossing:
+            delta_row = random.randint(0, ROW_COUNT - polymino_height)
+            delta_col = random.randint(0, COL_COUNT - polymino_width)
+            tmp_cells = [(monomino.row + delta_row, monomino.col + delta_col) for monomino in polymino.monomino_list]
+            crossing = set(tmp_cells) & set(busy_cells)
+
+        # Применяем изменения
+        for cell, monomino in zip(tmp_cells, polymino.monomino_list):
+            monomino.row, monomino.col = cell[0], cell[1]
+            monomino.refresh_coords()
 
 
 def draw_grid(surface):
