@@ -85,7 +85,12 @@ class Drag:
 
     def _polymino_failed_cells(self):
         c1 = [(get_cell_for_coords(*monomino.rect.center)) for monomino in self.polymino.monomino_list]
-        c2 = [(monomino.row, monomino.col) for polymino in self.polymino_list for monomino in polymino.monomino_list]
+        c2 = [
+            (monomino.row, monomino.col)
+            for polymino in self.polymino_list
+            for monomino in polymino.monomino_list
+            if polymino is not self.polymino
+        ]
         return len(set(c1) & set(c2)) != 0
 
 
