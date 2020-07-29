@@ -90,7 +90,7 @@ class Drag:
 
 
 class Level:
-    areas = [(7, 6)]
+    areas = [(9, 10)]
 
     def __init__(self):
         self.level_number = 0
@@ -108,41 +108,36 @@ class Level:
         # Площадь целевой области
         total_space = area_rows_count * area_cols_count
 
-        # Флаги переходов для формирования полимино
-        flags_count = 2 * area_cols_count * area_rows_count - area_cols_count - area_rows_count
-        flags = [(index < (3 * total_space / 4)) for index in range(flags_count)]
-        random.shuffle(flags)
-
-        # Словарь, в котором будем накапливать данные для формирования полимино
+        # Словарь, в котором будем накапливать данные полимино
         data = {}
 
-        marker = 0
-        current_area = [[0] * area_cols_count for _ in range(area_rows_count)]
-        for row in range(area_rows_count):
-            for col in range(area_cols_count):
-                if current_area[row][col] == 0:
-                    marker += 1
-                    current_area[row][col] = marker
-                    data[marker] = [(row, col)]
-                    current_marker = marker
-                else:
-                    current_marker = current_area[row][col]
+        # Составляем список свободных ячеек
+        free_cells = [(row, col) for row in range(area_rows_count) for col in range(area_cols_count)]
 
-                if row < (area_rows_count - 1):
-                    flag = flags.pop()
-                    if flag:
-                        row_beside, col_beside = row + 1, col
-                        if not current_area[row_beside][col_beside]:
-                            current_area[row_beside][col_beside] = current_marker
-                            data[current_marker].append((row_beside, col_beside))
+        # Общее количество полимино, которое будет на уровне (зависит от площади)
+        count_polyminos = total_space // 4
 
-                if col < (area_cols_count - 1):
-                    flag = flags.pop()
-                    if flag:
-                        row_beside, col_beside = row, col + 1
-                        if not current_area[row_beside][col_beside]:
-                            current_area[row_beside][col_beside] = current_marker
-                            data[current_marker].append((row_beside, col_beside))
+        # Расставляем точки формирования полимино
+        for marker in range(count_polyminos + 1):
+            cell = free_cells.pop(random.randint(0, len(free_cells)-1))
+            data[marker] = [cell]
+
+        # Допустимые смещения по осям
+        deltas = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+
+        # Запукаем "рост" полимино
+        while free_cells:
+            for marker, cells in data.items():
+                available_cells = [
+                    (cell[0] + delta_row, cell[1] + delta_col)
+                    for cell in cells
+                    for delta_row, delta_col in deltas
+                    if (cell[0] + delta_row, cell[1] + delta_col) in free_cells
+                ]
+                if available_cells:
+                    select_cell = random.choice(available_cells)
+                    free_cells.remove(select_cell)
+                    data[marker].append(select_cell)
 
         # Формируем полимино на основе сформированных данных
         polymino_list = []
