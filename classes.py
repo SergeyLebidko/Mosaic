@@ -95,9 +95,20 @@ class Drag:
 
 
 class Level:
-    areas = [(9, 8)]
 
     def __init__(self):
+        self.areas = []
+        count = 3
+        for row in range(3, 14, 2):
+            for col in range(row - 3, row + 6, 2):
+                if col < 3 or col > 14:
+                    continue
+                self.areas.extend([(row, col)] * count)
+                count += 1
+
+        self.areas.sort(key=lambda c: c[0] * c[1])
+
+        self.levels_count = len(self.areas)
         self.level_number = 0
 
     def __iter__(self):

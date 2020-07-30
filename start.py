@@ -1,7 +1,8 @@
 import pygame
 from settings import CELL_SIZE, W, H, WINDOW_TITLE, FPS, SPRITES_FOLDER
 from classes import Drag, Level
-from utils import draw_grid, create_sprite_folder, create_sprites, create_square_sprite, draw_polyminos, draw_area
+from utils import draw_grid, create_sprite_folder, create_sprites, create_square_sprite, draw_polyminos, draw_area, \
+    is_level_finish
 
 
 def main():
@@ -20,12 +21,14 @@ def main():
     # Создаем объект для ограничения FPS
     clock = pygame.time.Clock()
 
-    for level in Level():
+    levels = Level()
+    for level in levels:
         polymino_list = level['polymino_list']
         area = level['area']
         drag = Drag(polymino_list)
 
-        while True:
+        level_finish = False
+        while not level_finish:
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
@@ -47,6 +50,7 @@ def main():
                 # Сброс захвата полимино
                 if event.type == pygame.MOUSEBUTTONUP and event.button == pygame.BUTTON_LEFT:
                     drag.drop()
+                    level_finish = is_level_finish(*area, polymino_list)
 
             draw_grid(sc)
             draw_area(sc, *area)

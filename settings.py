@@ -26,7 +26,7 @@ TRANSPARENCY_COLOR = (0, 0, 0)
 SPRITE_COLOR_LEVEL_COUNT = 5
 
 # Ширина центральной зоны спрайта
-SPRITE_CENTER_AREA = 1
+SPRITE_CENTER_AREA = 3
 
 # Частота обновления окна
 FPS = 30
@@ -47,7 +47,7 @@ FIELD_RECT = pygame.Rect(CELL_SIZE, CELL_SIZE, CELL_SIZE * COL_COUNT, CELL_SIZE 
 WINDOW_TITLE = 'Mosaic'
 
 # Цвет фона ячеек
-CELL_COLOR = (220, 220, 220)
+CELL_COLOR = (210, 210, 210)
 
 # Цвет сетки
 GRID_COLOR = (120, 120, 120)

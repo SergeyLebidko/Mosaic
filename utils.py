@@ -52,6 +52,16 @@ def mix_polyminos(polymino_list):
             monomino.refresh_coords()
 
 
+def is_level_finish(anchor_row, anchor_col, area_rows_count, area_cols_count, polymino_list):
+    for polymino in polymino_list:
+        for monomino in polymino.monomino_list:
+            check_row = anchor_row <= monomino.row < (anchor_row + area_rows_count)
+            check_col = anchor_col <= monomino.col < (anchor_col + area_cols_count)
+            if not (check_row and check_col):
+                return False
+    return True
+
+
 def draw_grid(surface):
     surface.fill(CELL_COLOR)
     for x in range(CELL_SIZE, W - CELL_SIZE + 1, CELL_SIZE):
