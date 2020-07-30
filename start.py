@@ -1,7 +1,7 @@
 import pygame
 from settings import CELL_SIZE, W, H, WINDOW_TITLE, FPS, SPRITES_FOLDER
 from classes import Drag, Level
-from functions import draw_grid, create_sprite_folder, create_sprites, create_square_sprite, draw_polyminos, draw_area
+from utils import draw_grid, create_sprite_folder, create_sprites, create_square_sprite, draw_polyminos, draw_area
 
 
 def main():

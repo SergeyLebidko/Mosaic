@@ -1,7 +1,7 @@
 import pygame
 import random
 from settings import SPRITES_FOLDER, FIELD_RECT, SPRITE_COLORS_COUNT, COL_COUNT, ROW_COUNT
-from functions import get_cell_for_coords, get_coords_for_cell, mix_polyminos
+from utils import get_cell_for_coords, get_coords_for_cell, mix_polyminos
 
 
 class Monomino(pygame.sprite.Sprite):
