@@ -31,7 +31,7 @@ def main():
         area = level['area']
         level_number = level['level_number']
 
-        msg = f'Уровень {level_number} из {levels.levels_count}'
+        msg = f'Уровень {level_number + 1} из {levels.levels_count}'
         drag = Drag(polymino_list)
 
         level_finish = False

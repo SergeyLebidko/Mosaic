@@ -1,7 +1,7 @@
 import pygame
 import random
 from settings import SPRITES_FOLDER, FIELD_RECT, SPRITE_COLORS_COUNT, COL_COUNT, ROW_COUNT
-from utils import get_cell_for_coords, get_coords_for_cell, mix_polyminos
+from utils import get_cell_for_coords, get_coords_for_cell, mix_polyminos, load_game
 
 
 class Monomino(pygame.sprite.Sprite):
@@ -108,16 +108,40 @@ class Level:
                 count += 1
 
         self.areas.sort(key=lambda c: c[0] * c[1])
-
         self.levels_count = len(self.areas)
         self.level_number = 0
+
+        self.loaded_level = load_game()
 
     def __iter__(self):
         return self
 
     def __next__(self):
+        # Если есть данные, загруженные с жесткого диска, то возвращаем в первую очередь их
+        if self.loaded_level:
+            try:
+                data = self.loaded_level
+                self.loaded_level = None
+                level = {
+                    'level_number': data['level_number'],
+                    'area': data['area']
+                }
+                polymino_list = []
+                for element in data['polymino_list']:
+                    color_number = element['color_number']
+                    polymino = Polymino()
+                    for cell in element['cells']:
+                        polymino.add(Monomino(cell[0], cell[1], color_number))
+                    polymino_list.append(polymino)
+                level['polymino_list'] = polymino_list
+
+                self.level_number = data['level_number']
+                return level
+            except KeyError:
+                pass
+
         if self.level_number == len(self.areas):
-            self.level_number = 1
+            self.level_number = 0
 
         # Количество строк и столбцов в целевой области текущего уровня
         area_rows_count, area_cols_count = self.areas[self.level_number]
@@ -175,7 +199,7 @@ class Level:
 
         # В словаре будет храниться описание уровня
         level = {
-            'level_number': self.level_number + 1,
+            'level_number': self.level_number,
             'polymino_list': polymino_list,
             'area': (anchor_row, anchor_col, area_rows_count, area_cols_count)
         }

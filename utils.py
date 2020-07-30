@@ -2,6 +2,7 @@ import json
 import os
 import pygame
 import random
+from json.decoder import JSONDecodeError
 from PIL import Image, ImageDraw
 from settings import CELL_SIZE, CELL_COLOR, GRID_COLOR, W, H, SPRITES_FOLDER, SPRITE_COLOR_LEVEL_COUNT, \
     SPRITE_CENTER_AREA, TRANSPARENCY_COLOR, COLOR_PRESETS, AREA_COLORS, ROW_COUNT, COL_COUNT, FONT_COLOR, SAVE_FILENAME
@@ -133,7 +134,7 @@ def create_sprites(r0=100):
 
 
 def save_game(level):
-    save_data = {
+    data_to_save = {
         'level_number': level['level_number'],
         'area': level['area'],
     }
@@ -146,11 +147,18 @@ def save_game(level):
                 'cells': [(monomino.row, monomino.col) for monomino in polymino.monomino_list]
             }
         )
-    save_data['polymino_list'] = polymino_list
+    data_to_save['polymino_list'] = polymino_list
 
     with open(SAVE_FILENAME, 'wt') as file:
-        file.write(json.dumps(save_data))
+        file.write(json.dumps(data_to_save))
 
 
 def load_game():
+    try:
+        with open(SAVE_FILENAME, 'rt') as file:
+            line = file.read()
+        data = json.loads(line)
+        return data
+    except (FileNotFoundError, JSONDecodeError):
+        pass
     return None
