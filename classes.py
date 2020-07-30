@@ -116,7 +116,7 @@ class Level:
 
     def __next__(self):
         if self.level_number == len(self.areas):
-            raise StopIteration
+            self.level_number = 1
 
         # Количество строк и столбцов в целевой области текущего уровня
         area_rows_count, area_cols_count = self.areas[self.level_number]
