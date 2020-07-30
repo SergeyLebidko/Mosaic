@@ -1,8 +1,9 @@
 import pygame
+import time
 from settings import CELL_SIZE, W, H, WINDOW_TITLE, FPS, SPRITES_FOLDER
 from classes import Drag, Level
 from utils import draw_grid, create_sprite_folder, create_sprites, create_square_sprite, draw_polyminos, draw_area, \
-    is_level_finish
+    is_level_finish, draw_msg
 
 
 def main():
@@ -21,10 +22,16 @@ def main():
     # Создаем объект для ограничения FPS
     clock = pygame.time.Clock()
 
+    # Создаем шрифт
+    font = pygame.font.Font(None, 36)
+
     levels = Level()
     for level in levels:
         polymino_list = level['polymino_list']
         area = level['area']
+        level_number = level['level_number']
+
+        msg = f'Уровень {level_number} из {levels.levels_count}'
         drag = Drag(polymino_list)
 
         level_finish = False
@@ -53,11 +60,14 @@ def main():
                     level_finish = is_level_finish(*area, polymino_list)
 
             draw_grid(sc)
+            draw_msg(sc, msg, font)
             draw_area(sc, *area)
             draw_polyminos(sc, polymino_list, drag)
 
             pygame.display.update()
             clock.tick(FPS)
+
+        time.sleep(1)
 
 
 if __name__ == '__main__':

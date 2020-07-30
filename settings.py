@@ -46,6 +46,9 @@ FIELD_RECT = pygame.Rect(CELL_SIZE, CELL_SIZE, CELL_SIZE * COL_COUNT, CELL_SIZE 
 # Заголовок окна
 WINDOW_TITLE = 'Mosaic'
 
+# Цвет шрифта
+FONT_COLOR = (100, 100, 100)
+
 # Цвет фона ячеек
 CELL_COLOR = (210, 210, 210)
 

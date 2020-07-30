@@ -3,7 +3,7 @@ import pygame
 import random
 from PIL import Image, ImageDraw
 from settings import CELL_SIZE, CELL_COLOR, GRID_COLOR, W, H, SPRITES_FOLDER, SPRITE_COLOR_LEVEL_COUNT, \
-    SPRITE_CENTER_AREA, TRANSPARENCY_COLOR, COLOR_PRESETS, AREA_COLORS, ROW_COUNT, COL_COUNT
+    SPRITE_CENTER_AREA, TRANSPARENCY_COLOR, COLOR_PRESETS, AREA_COLORS, ROW_COUNT, COL_COUNT, FONT_COLOR
 
 
 def get_coords_for_cell(row, col):
@@ -91,6 +91,12 @@ def draw_area(surface, anchor_row, anchor_col, area_rows_count, area_cols_count)
             pygame.draw.rect(area_surface, color, (x, y, 10, 10))
 
     surface.blit(area_surface, (x0, y0))
+
+
+def draw_msg(surface, msg, font):
+    rendered_msg = font.render(msg, 1, FONT_COLOR)
+    rect = rendered_msg.get_rect()
+    surface.blit(rendered_msg, (W // 2 - rect.width // 2, CELL_SIZE // 2 - rect.height // 2))
 
 
 def create_sprite_folder():
