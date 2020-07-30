@@ -60,3 +60,6 @@ AREA_COLORS = (
     (80, 80, 80),
     (120, 120, 120)
 )
+
+# Имя файла для сохранений
+SAVE_FILENAME = 'save_data.txt'

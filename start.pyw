@@ -3,7 +3,7 @@ import time
 from settings import CELL_SIZE, W, H, WINDOW_TITLE, FPS, SPRITES_FOLDER
 from classes import Drag, Level
 from utils import draw_grid, create_sprite_folder, create_sprites, create_square_sprite, draw_polyminos, draw_area, \
-    is_level_finish, draw_msg
+    is_level_finish, draw_msg, save_game
 
 
 def main():
@@ -39,6 +39,7 @@ def main():
             events = pygame.event.get()
             for event in events:
                 if event.type == pygame.QUIT:
+                    save_game(level)
                     pygame.quit()
                     exit()
 

@@ -8,6 +8,7 @@ class Monomino(pygame.sprite.Sprite):
 
     def __init__(self, row, col, color_number):
         super().__init__()
+        self.color_number = color_number
         self.image = pygame.image.load(f'{SPRITES_FOLDER}/{color_number}.png')
         self.rect = self.image.get_rect()
         self.row, self.col = row, col

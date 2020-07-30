@@ -1,9 +1,10 @@
+import json
 import os
 import pygame
 import random
 from PIL import Image, ImageDraw
 from settings import CELL_SIZE, CELL_COLOR, GRID_COLOR, W, H, SPRITES_FOLDER, SPRITE_COLOR_LEVEL_COUNT, \
-    SPRITE_CENTER_AREA, TRANSPARENCY_COLOR, COLOR_PRESETS, AREA_COLORS, ROW_COUNT, COL_COUNT, FONT_COLOR
+    SPRITE_CENTER_AREA, TRANSPARENCY_COLOR, COLOR_PRESETS, AREA_COLORS, ROW_COUNT, COL_COUNT, FONT_COLOR, SAVE_FILENAME
 
 
 def get_coords_for_cell(row, col):
@@ -129,3 +130,27 @@ def create_square_sprite(r0=100, color=(255, 255, 255), filename='square'):
 def create_sprites(r0=100):
     for number, color in enumerate(COLOR_PRESETS, 1):
         create_square_sprite(r0=r0, color=color, filename=f'{number}')
+
+
+def save_game(level):
+    save_data = {
+        'level_number': level['level_number'],
+        'area': level['area'],
+    }
+    polymino_list = []
+    for polymino in level['polymino_list']:
+        color_number = polymino.monomino_list[0].color_number
+        polymino_list.append(
+            {
+                'color_number': color_number,
+                'cells': [(monomino.row, monomino.col) for monomino in polymino.monomino_list]
+            }
+        )
+    save_data['polymino_list'] = polymino_list
+
+    with open(SAVE_FILENAME, 'wt') as file:
+        file.write(json.dumps(save_data))
+
+
+def load_game():
+    return None
